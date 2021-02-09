@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Search widget with multiple sources | Sample | ArcGIS API for JavaScript 4.18</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      .esri-search {
+        width: 400px !important; 
+      }
+
+      .esri-search__suggestions-menu {
+        max-height: 520px !important;
+      }
+
+      .esri-legend {
+        width: 332px !important; 
+        padding-bottom: 32px;
+        margin-bottom: 34px;
+      }
+
+      .esri-popup__main-container {
+        width: 332px !important; 
+        margin-top: 312px;
+      }
+
+      .btn-grouped {
+        width: 110px !important;
+      }
+
+      .esri-legend__service-label {
+        display: none !important;
+      }
+
+      #map-selector {
+        display: none;
+        margin-top: 0;
+      }
+      
+      .btns {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        overflow: auto;
+      }
+
+      .btn-switch {
+        flex-grow: 4;
+        background-color: rgba(71, 68, 71, 0.5);
+        color: #fff;
+        margin: 1px;
+        width: 50%;
+        padding: 20px;
+        overflow: auto;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .active-map {
+        color: #fff;
+        background-color: rgb(46, 2, 39);
+      }
+
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.18/esri/themes/light/main.css" />
+    <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.2.5/css/calcite-web.min.css">
+    <script src="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.2.5/js/calcite-web.min.js"></script>
+    <script src="https://js.arcgis.com/4.18/"></script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <nav id="map-selector" class="leader-1">
+      <div class="btn-switch active-map" data-id="0">Elementary Schools</div>
+      <div class="btn-switch" data-id="1">Middle Schools</div>
+      <div class="btn-switch" data-id="2">High Schools</div>
+    </nav>
+    <script>
+      require(["dojo/dom","esri/Map", "esri/views/MapView", "esri/WebMap", "esri/Basemap", "esri/layers/Layer", "esri/layers/FeatureLayer", "esri/widgets/Search", "esri/widgets/Legend"], function(
+        dojoDom,
+        Map,
+        MapView,
+        WebMap,
+        Basemap,
+        Layer,
+        FeatureLayer,
+        Search,
+        Legend
+      ) {
+        var searchWidget
+        var legend
+        var webmapids = [
+          "edaa2f384af740248c9e3d946d2855bd",
+          "5bcfd4724f8c427b8e83d09e2fd670cd",
+          "81ea00a29b3949eea09f05180563f0c1"
+        ];
+        
+        /************************************************************
+         * Create multiple WebMap instances
+         ************************************************************/
+         var webmaps = webmapids.map(function(webmapid) {
+          return new WebMap({
+            portalItem: {
+              // autocasts as new PortalItem()
+              id: webmapid
+            }
+          });
+        });
+
+        document.querySelector(".leader-1").addEventListener("click", function(event) {
+          /************************************************************
+           * On a button click, change the map of the View
+           ************************************************************/
+          var id = event.target.getAttribute("data-id");
+          if (id) {
+            var webmap = webmaps[id];
+            view.map = webmap;            
+            var layer = webmap.layers.getItemAt(1);
+            if (searchWidget){
+              searchWidget.sources[0] = {
+                layer: layer,
+                //suggestionTemplate: "District:{school_district}, School: {school_name}",
+                displayField: "school_name",
+                searchFields: ["school_name"],
+                exactMatch: false,
+                maxSuggestions:10,
+                name: "Calfornia Schools",
+                placeholder: "Find a School or District"
+              }
+            }
+            if (legend){
+              legend.layerInfos = [{
+              layer: layer
+              }]
+            }
+            var nodes = document.querySelectorAll(".btn-switch");
+            for (var idx = 0; idx < nodes.length; idx++) {
+              var node = nodes[idx];
+              var mapIndex = node.getAttribute("data-id");
+              if (mapIndex === id) {
+                node.classList.add("active-map");
+              } else {
+                node.classList.remove("active-map");
+              }
+            }
+          }
+        });
+
+        // var map = new Map({
+        //   basemap: basemap
+        // });
+
+        var view = new MapView({
+          container: "viewDiv",
+          map: webmaps[0],
+          //center: [-116.9, 34.2],
+          zoom: 5,
+          popup: {
+            actions: [],
+            dockEnabled: true,
+            dockOptions: {
+              buttonEnabled: false,
+              breakpoint: false,
+              position: "top-right"
+            }
+          }
+        });
+        
+        //********
+        view.when(function() {
+          // get the first layer in the collection of operational layers in the WebMap
+          // when the resources in the MapView have loaded.
+          var layer = webmaps[0].layers.getItemAt(1);
+          initSearchWidget(layer);
+          initLegend(layer);
+          initMapSelector();
+        });
+
+        function initSearchWidget(layer) {
+          searchWidget = new Search({
+            view: view,
+            sources: [
+              {
+                layer: layer,
+                //suggestionTemplate: "District:{school_district}, School: {school_name}",
+                displayField: "school_name",
+                searchFields: ["school_name"],
+                exactMatch: false,
+                maxSuggestions:10,
+                name: "Calfornia Schools",
+                placeholder: "Find a School or District"
+              }
+            ],
+            includeDefaultSources: false,
+            locationEnabled: false,
+            maxSuggestions: 8
+          });
+          view.ui.add(searchWidget, {
+            position: "top-left",
+            index: 0
+          });
+        }
+
+        function initLegend(layer) { 
+          legend = new Legend({
+            view: view,
+            layerInfos: [{
+              layer: layer
+            }]
+          });
+          view.ui.add(legend, "top-right");
+        }
+
+        function initMapSelector() {
+          var mapSelector = dojoDom.byId("map-selector");
+          view.ui.add(mapSelector, {position: "top-right", index: 0});
+          mapSelector.style.display = "flex";
+        }
+
+        function initZoom() {
+          view.ui.move("zoom", "bottom-right");
+        }
+
+      });
+    </script>
+  </body>
+</html>
