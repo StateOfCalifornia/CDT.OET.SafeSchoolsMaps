@@ -612,23 +612,25 @@
                * Then query for that OID client side in the newly visible layer
                * Set the features in the popup, open and page to last selected.
                *
-               * There is additional test logic to keep the feature order in sync 
+               * There is additional logic to keep the feature order in sync
                *
                ***************************************************************/
 
               if (layer.visible && view.popup.visible) {
                 var objectIds = [];
+                var attributeStore = {};
                 var selectedOID =
                   view.popup.selectedFeature.attributes[layer.objectIdField];
                 for (var j = 0; j < view.popup.features.length; j++) {
                   var feature = view.popup.features[j];
-                  objectIds.push(feature.attributes[layer.objectIdField]);
+                  var featureOID = feature.attributes[layer.objectIdField];
+                  objectIds.push(featureOID);
+                  attributeStore[featureOID] = feature.attributes;
                 }
                 var selectedIndex = objectIds.indexOf(selectedOID);
                 view.whenLayerView(layer).then(function (layerView) {
                   var query = layerView.createQuery();
                   query.objectIds = objectIds;
-
                   if (layerView.updating) {
                     watchUtils.whenFalseOnce(
                       layerView,
@@ -649,6 +651,8 @@
                                   feature.attributes[layer.objectIdField] ===
                                   oid
                                 ) {
+                                  // merge attributes
+                                  feature.attributes = attributeStore[oid];
                                   orderedFeatures.push(feature);
                                 }
                               }
@@ -675,6 +679,8 @@
                             if (
                               feature.attributes[layer.objectIdField] === oid
                             ) {
+                              // merge attributes
+                              feature.attributes = attributeStore[oid];
                               orderedFeatures.push(feature);
                             }
                           }
