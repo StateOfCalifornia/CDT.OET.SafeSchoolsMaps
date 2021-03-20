@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/ca-safe-schools/data-upload/static/css/main.40f1295b.chunk.css",
-    "main.js": "/ca-safe-schools/data-upload/static/js/main.8225f7c5.chunk.js",
-    "main.js.map": "/ca-safe-schools/data-upload/static/js/main.8225f7c5.chunk.js.map",
-    "runtime-main.js": "/ca-safe-schools/data-upload/static/js/runtime-main.8c2d67c5.js",
-    "runtime-main.js.map": "/ca-safe-schools/data-upload/static/js/runtime-main.8c2d67c5.js.map",
-    "static/js/2.6dfed97a.chunk.js": "/ca-safe-schools/data-upload/static/js/2.6dfed97a.chunk.js",
-    "static/js/2.6dfed97a.chunk.js.map": "/ca-safe-schools/data-upload/static/js/2.6dfed97a.chunk.js.map",
-    "static/js/3.9306affa.chunk.js": "/ca-safe-schools/data-upload/static/js/3.9306affa.chunk.js",
-    "static/js/3.9306affa.chunk.js.map": "/ca-safe-schools/data-upload/static/js/3.9306affa.chunk.js.map",
-    "index.html": "/ca-safe-schools/data-upload/index.html",
-    "static/css/main.40f1295b.chunk.css.map": "/ca-safe-schools/data-upload/static/css/main.40f1295b.chunk.css.map",
-    "static/js/2.6dfed97a.chunk.js.LICENSE.txt": "/ca-safe-schools/data-upload/static/js/2.6dfed97a.chunk.js.LICENSE.txt",
-    "static/media/splashBackground.5204fcdc.jpg": "/ca-safe-schools/data-upload/static/media/splashBackground.5204fcdc.jpg"
+    "main.css": "/data-upload/static/css/main.40f1295b.chunk.css",
+    "main.js": "/data-upload/static/js/main.8e7d9589.chunk.js",
+    "main.js.map": "/data-upload/static/js/main.8e7d9589.chunk.js.map",
+    "runtime-main.js": "/data-upload/static/js/runtime-main.d19126f8.js",
+    "runtime-main.js.map": "/data-upload/static/js/runtime-main.d19126f8.js.map",
+    "static/js/2.bacee196.chunk.js": "/data-upload/static/js/2.bacee196.chunk.js",
+    "static/js/2.bacee196.chunk.js.map": "/data-upload/static/js/2.bacee196.chunk.js.map",
+    "static/js/3.9306affa.chunk.js": "/data-upload/static/js/3.9306affa.chunk.js",
+    "static/js/3.9306affa.chunk.js.map": "/data-upload/static/js/3.9306affa.chunk.js.map",
+    "index.html": "/data-upload/index.html",
+    "static/css/main.40f1295b.chunk.css.map": "/data-upload/static/css/main.40f1295b.chunk.css.map",
+    "static/js/2.bacee196.chunk.js.LICENSE.txt": "/data-upload/static/js/2.bacee196.chunk.js.LICENSE.txt",
+    "static/media/splashBackground.5204fcdc.jpg": "/data-upload/static/media/splashBackground.5204fcdc.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.8c2d67c5.js",
-    "static/js/2.6dfed97a.chunk.js",
+    "static/js/runtime-main.d19126f8.js",
+    "static/js/2.bacee196.chunk.js",
     "static/css/main.40f1295b.chunk.css",
-    "static/js/main.8225f7c5.chunk.js"
+    "static/js/main.8e7d9589.chunk.js"
   ]
 }
