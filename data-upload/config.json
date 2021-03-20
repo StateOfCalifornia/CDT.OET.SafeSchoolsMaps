@@ -1,0 +1,13 @@
+{
+  "featureServiceURL": "https://services3.arcgis.com/uknczv4rpevve42E/ArcGIS/rest/services/TrailerBillDistricts/FeatureServer/0",
+  "templateUrl": "https://california.maps.arcgis.com/sharing/rest/content/items/2d458e6ee04b494a9747271ad8ffcc08/data",
+  "isValidField": "IsValid",
+  "isValidValue": "Valid",
+  "schoolNameFieldEsri": "school_name",
+  "schoolNameFieldExcel": "School",
+  "authInfo": {
+    "clientId": "KZryzIWRkPmHUGlJ",
+    "portalUrl": "https://california-hub.maps.arcgis.com/sharing",
+    "popup": false
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/ca-safe-schools/apps/data-upload/static/css/main.40f1295b.chunk.css",
+    "main.js": "/ca-safe-schools/apps/data-upload/static/js/main.c253e83f.chunk.js",
+    "main.js.map": "/ca-safe-schools/apps/data-upload/static/js/main.c253e83f.chunk.js.map",
+    "runtime-main.js": "/ca-safe-schools/apps/data-upload/static/js/runtime-main.f2d0c7c7.js",
+    "runtime-main.js.map": "/ca-safe-schools/apps/data-upload/static/js/runtime-main.f2d0c7c7.js.map",
+    "static/js/2.357ebeca.chunk.js": "/ca-safe-schools/apps/data-upload/static/js/2.357ebeca.chunk.js",
+    "static/js/2.357ebeca.chunk.js.map": "/ca-safe-schools/apps/data-upload/static/js/2.357ebeca.chunk.js.map",
+    "static/js/3.9306affa.chunk.js": "/ca-safe-schools/apps/data-upload/static/js/3.9306affa.chunk.js",
+    "static/js/3.9306affa.chunk.js.map": "/ca-safe-schools/apps/data-upload/static/js/3.9306affa.chunk.js.map",
+    "index.html": "/ca-safe-schools/apps/data-upload/index.html",
+    "static/css/main.40f1295b.chunk.css.map": "/ca-safe-schools/apps/data-upload/static/css/main.40f1295b.chunk.css.map",
+    "static/js/2.357ebeca.chunk.js.LICENSE.txt": "/ca-safe-schools/apps/data-upload/static/js/2.357ebeca.chunk.js.LICENSE.txt",
+    "static/media/splashBackground.5204fcdc.jpg": "/ca-safe-schools/apps/data-upload/static/media/splashBackground.5204fcdc.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f2d0c7c7.js",
+    "static/js/2.357ebeca.chunk.js",
+    "static/css/main.40f1295b.chunk.css",
+    "static/js/main.c253e83f.chunk.js"
+  ]
+}
