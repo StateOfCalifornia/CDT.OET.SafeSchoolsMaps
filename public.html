@@ -107,10 +107,6 @@
         min-width: 48px;
       }
 
-      .esri-ui-top-left {
-        top: 48px !important;
-      }
-
       .esri-search {
         width: 400px !important;
         height: 40px;
@@ -183,10 +179,6 @@
         box-shadow: 0 0px 2px rgb(0 0 0 / 50%) !important;
       }
 
-      .btn-grouped {
-        width: 110px !important;
-      }
-
       .esri-legend__service-label {
         display: none !important;
       }
@@ -199,29 +191,6 @@
         left: 16px;
         top: 80px;
         box-shadow: 0 0px 2px rgb(0 0 0 / 50%) !important;
-      }
-
-      .btns {
-        margin: 0 auto;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        overflow: auto;
-      }
-
-      .btn-switch {
-        flex-grow: 4;
-        background-color: rgba(71, 68, 71, 0.85);
-        color: #fff;
-        width: 50%;
-        padding: 8px;
-        margin: 1px;
-        overflow: auto;
-        text-align: center;
-        cursor: pointer;
-        font-family: "Montserrat", sans-serif !important;
-        font-size: 16px;
       }
 
       .active-map {
@@ -266,10 +235,6 @@
           width: 100% !important;
         }
 
-        .esri-ui-top-left {
-          top: 32px !important;
-        }
-
         #map-selector {
           width: 100% !important;
           left: 0;
@@ -311,9 +276,14 @@
           transition: background-color 125ms ease-in-out;
         }
 
+        .esri-popup__navigation {
+          flex: 1;
+          justify-content: space-around !important;
+        }
+
         .esri-popup__main-container {
           width: 100% !important;
-          margin-top: 80px;
+          margin-top: 50px;
         }
 
         .legendOpen {
@@ -322,7 +292,7 @@
           right: -26px !important;
           top: auto;
           left: auto;
-          bottom: 150px;
+          bottom: 110px;
           z-index: 100;
           padding: 8px 12px;
           border-radius: 8px 8px 0 0;
@@ -389,11 +359,6 @@
     </div>
 
     <div id="viewDiv"></div>
-    <nav id="map-selector" class="leader-1">
-      <div class="btn-switch" data-id="elementary">Elementary</div>
-      <div class="btn-switch" data-id="middle">Middle</div>
-      <div class="btn-switch" data-id="high">High</div>
-    </nav>
     <div id="legend-div" />
     <div
       role="button"
@@ -422,36 +387,18 @@
          * 2.  Update Header Text Search for `</h1>`
          * 3.  Update configuration variables directly below: webmapId, searchZoomScale, searchLocationEnabled
          *       - webmapId - Item ID of data to load. See Project README for webmap requirements
-         *       - searchZoomScale - the scale to zoom when a point is selected. 50000 looks good? If school data is polygon, set to null.
+         *       - searchZoomScale - the scale to zoom when a point is selected, non-point data will zoom to extent
          *       - searchLocationEnabled - In search box, enable device location. I'd recommend true for polygon data false for point.
-         *       - initialSchoolType - the school grade selected. Options include: elementary | middle | high
          *
          *********************************************************************/
 
-        var webmapId = "fdb4604d050f4a22bedf13be556ec80f";
-        var searchZoomScale = null;
-        var searchLocationEnabled = true;
-        var initialSchoolType = "elementary"; // elementary | middle | high
+        var webmapId = "abae6fcfeb0f4e7dab9424fef311bc9c";
+        var searchZoomScale = 2500;
+        var searchLocationEnabled = false;
 
         var searchWidget = null;
         var legend = null;
 
-        var schoolLayerStore = {
-          elementary: {
-            layerId: null,
-            searchSourceIndex: null,
-          },
-          middle: {
-            layerId: null,
-            searchSourceIndex: null,
-          },
-          high: {
-            layerId: null,
-            searchSourceIndex: null,
-          },
-        };
-
-        initGradeSelector(initialSchoolType);
         initEventListeners();
 
         var view = new MapView({
@@ -478,80 +425,83 @@
         });
 
         view.when(function () {
-          // save the layer Ids for school layers
-          view.map.layers.forEach(function (item, i) {
-            if (item.title.toLowerCase().indexOf("elementary") !== -1) {
-              item.visible = initialSchoolType === "elementary";
-              schoolLayerStore.elementary.layerId = item.id;
-            } else if (item.title.toLowerCase().indexOf("middle") !== -1) {
-              item.visible = initialSchoolType === "middle";
-              schoolLayerStore.middle.layerId = item.id;
-            } else if (item.title.toLowerCase().indexOf("high") !== -1) {
-              item.visible = initialSchoolType === "high";
-              schoolLayerStore.high.layerId = item.id;
-            }
-          });
           initSearchWidget();
           initLegend();
         });
 
-        watchUtils.whenTrue(view.popup, "visible", function () {
+        watchUtils.watch(view.popup, "visible", function (value) {
           if (window.matchMedia("(max-width: 750px)").matches) {
-            closeLegend();
+            if (value) {
+              closeLegend();
+              hideLegendButton();
+            } else {
+              showLegendButton();
+            }
           }
         });
 
-        function initGradeSelector(selectedSchoolType) {
-          //select school button selection
-          var nodes = document.querySelectorAll(".btn-switch");
-          for (var idx = 0; idx < nodes.length; idx++) {
-            var node = nodes[idx];
-            var mapIndex = node.getAttribute("data-id");
-            if (mapIndex === selectedSchoolType) {
-              node.classList.add("active-map");
-            } else {
-              node.classList.remove("active-map");
+        watchUtils.watch(view.popup, "selectedFeature", function (value) {
+          if (view.popup.selectedFeature) {
+            var layer = view.popup.selectedFeature.layer;
+            zoomToVisibleScale(layer);
+          }
+        });
+
+        function zoomToVisibleScale(layer) {
+          if (!layer || !view.constraints || !view.constraints.effectiveLODs) {
+            return;
+          }
+
+          var zoomToLOD = null;
+          if (view.scale < layer.maxScale) {
+            for (
+              var i = view.constraints.effectiveLODs.length - 1;
+              i > -1;
+              i--
+            ) {
+              var lod = view.constraints.effectiveLODs[i];
+              if (lod.scale > layer.maxScale) {
+                zoomToLOD = lod;
+                break;
+              }
             }
+          } else if (layer.minScale && view.scale > layer.minScale) {
+            for (var i = 0; i < view.constraints.effectiveLODs.length; i++) {
+              var lod = view.constraints.effectiveLODs[i];
+              if (lod.scale < layer.minScale) {
+                zoomToLOD = lod;
+                break;
+              }
+            }
+          }
+          if (zoomToLOD) {
+            view.scale = zoomToLOD.scale + 1;
           }
         }
 
         function initSearchWidget() {
           searchWidget = new Search({
             view: view,
+            searchAllEnabled: true,
+            allPlaceholder: "Search by School or District Name",
             includeDefaultSources: function (sourcesResponse) {
               var results = [];
-
               sourcesResponse.defaultSources.forEach(function (item, i) {
                 /**************************************************************
                  *
-                 * Filter webmap search sources, only allowing school layers.
-                 * Save the index of each source, for toggling grade layers.
+                 * Filter webmap search sources, allowing pre-configured layers
+                 * (this excludes the default geocoder).
                  *
                  * NOTE: The source selection dropdown button is removed via css
                  * See style .esri-search__sources-button
                  *
                  *************************************************************/
                 if (item.layer) {
-                  if (searchZoomScale) {
+                  if (searchZoomScale && item.layer.geometryType === "point") {
                     item.zoomScale = searchZoomScale;
                   }
-                  if (
-                    item.layer.title.toLowerCase().indexOf("elementary") !== -1
-                  ) {
-                    schoolLayerStore.elementary.searchSourceIndex =
-                      results.length;
-                    results.push(item);
-                  } else if (
-                    item.layer.title.toLowerCase().indexOf("middle") !== -1
-                  ) {
-                    schoolLayerStore.middle.searchSourceIndex = results.length;
-                    results.push(item);
-                  } else if (
-                    item.layer.title.toLowerCase().indexOf("high") !== -1
-                  ) {
-                    schoolLayerStore.high.searchSourceIndex = results.length;
-                    results.push(item);
-                  }
+                  item.maxSuggestions = 3;
+                  results.push(item);
                 }
               });
               return results;
@@ -560,10 +510,8 @@
             maxSuggestions: 8,
           });
 
-          // after all sources are added, select initally active source
-          searchWidget.allSources.on("change", function (event) {
-            searchWidget.activeSourceIndex =
-              schoolLayerStore[initialSchoolType].searchSourceIndex;
+          searchWidget.on("select-result", function (event) {
+            console.log("The selected search result: ", event);
           });
 
           view.ui.add(searchWidget, {
@@ -580,29 +528,6 @@
         }
 
         function initEventListeners() {
-          //Click on Grade Type Buttons
-          document
-            .querySelector(".leader-1")
-            .addEventListener("click", function (event) {
-              var id = event.target.getAttribute("data-id");
-              if (id) {
-                //change school layer
-                toggleSchoolLayer(id);
-
-                //update school button selection
-                var nodes = document.querySelectorAll(".btn-switch");
-                for (var idx = 0; idx < nodes.length; idx++) {
-                  var node = nodes[idx];
-                  var mapIndex = node.getAttribute("data-id");
-                  if (mapIndex === id) {
-                    node.classList.add("active-map");
-                  } else {
-                    node.classList.remove("active-map");
-                  }
-                }
-              }
-            });
-
           // Close Legend Button Click
           document
             .querySelector(".legendClose")
@@ -617,116 +542,6 @@
             });
         }
 
-        function toggleSchoolLayer(visibleSchoolType) {
-          var schoolTypes = Object.keys(schoolLayerStore);
-          for (var i = 0; i < schoolTypes.length; i++) {
-            var schoolType = schoolTypes[i];
-            var layerId = schoolLayerStore[schoolType].layerId;
-            var layer = view.map.findLayerById(layerId);
-            if (layer) {
-              layer.visible = schoolType === visibleSchoolType;
-
-              /****************************************************************
-               *
-               * if block below contains logic to persist the selected popup
-               * The school layers all have the same OIDs.
-               * Get the OIDs of the open Popup,
-               * Then query for that OID client side in the newly visible layer
-               * Set the features in the popup, open and page to last selected.
-               *
-               * There is additional logic to keep the feature order in sync
-               *
-               ***************************************************************/
-
-              if (layer.visible && view.popup.visible) {
-                var objectIds = [];
-                var attributeStore = {};
-                var selectedOID =
-                  view.popup.selectedFeature.attributes[layer.objectIdField];
-                for (var j = 0; j < view.popup.features.length; j++) {
-                  var feature = view.popup.features[j];
-                  var featureOID = feature.attributes[layer.objectIdField];
-                  objectIds.push(featureOID);
-                  attributeStore[featureOID] = feature.attributes;
-                }
-                var selectedIndex = objectIds.indexOf(selectedOID);
-                view.whenLayerView(layer).then(function (layerView) {
-                  var query = layerView.createQuery();
-                  query.objectIds = objectIds;
-                  if (layerView.updating) {
-                    watchUtils.whenFalseOnce(
-                      layerView,
-                      "updating",
-                      function () {
-                        layerView.queryFeatures(query).then(function (results) {
-                          if (results.features.length) {
-                            var orderedFeatures = [];
-                            for (var j = 0; j < objectIds.length; j++) {
-                              var oid = objectIds[j];
-                              for (
-                                var k = 0;
-                                k < results.features.length;
-                                k++
-                              ) {
-                                var feature = results.features[k];
-                                if (
-                                  feature.attributes[layer.objectIdField] ===
-                                  oid
-                                ) {
-                                  // merge attributes
-                                  feature.attributes = attributeStore[oid];
-                                  orderedFeatures.push(feature);
-                                }
-                              }
-                            }
-                            view.popup.open({
-                              features: orderedFeatures,
-                            });
-
-                            view.popup.selectedFeatureIndex = selectedIndex;
-                          } else {
-                            view.popup.close();
-                          }
-                        });
-                      }
-                    );
-                  } else {
-                    layerView.queryFeatures(query).then(function (results) {
-                      if (results.features.length) {
-                        var orderedFeatures = [];
-                        for (var j = 0; j < objectIds.length; j++) {
-                          var oid = objectIds[j];
-                          for (var k = 0; k < results.features.length; k++) {
-                            var feature = results.features[k];
-                            if (
-                              feature.attributes[layer.objectIdField] === oid
-                            ) {
-                              // merge attributes
-                              feature.attributes = attributeStore[oid];
-                              orderedFeatures.push(feature);
-                            }
-                          }
-                        }
-                        view.popup.open({
-                          features: orderedFeatures,
-                        });
-                        view.popup.selectedFeatureIndex = selectedIndex;
-                      } else {
-                        view.popup.close();
-                      }
-                    });
-                  }
-                });
-              }
-            }
-          }
-          if (searchWidget) {
-            searchWidget.clear();
-            searchWidget.activeSourceIndex =
-              schoolLayerStore[visibleSchoolType].searchSourceIndex;
-          }
-        }
-
         function openLegend() {
           document.getElementById("legend-div").style.width = "100%";
           document.querySelector(".legendClose").style.display = "";
@@ -736,19 +551,32 @@
           document.getElementById("legend-div").style.width = "0";
           document.querySelector(".legendClose").style.display = "none";
         }
+
+        function hideLegendButton() {
+          document.getElementById("legendOpen").style.display = "none";
+        }
+
+        function showLegendButton() {
+          document.getElementById("legendOpen").style.display = "";
+        }
       });
     </script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-        
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
+    ></script>
 
-        //statewide GA property
-        gtag('config', 'UA-3419582-2'); 
-        //please update state department UA code in line below before deployment	
-        gtag('config', 'UA-21974567-38');
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      //statewide GA property
+      gtag("config", "UA-3419582-2");
+      //please update state department UA code in line below before deployment
+      gtag("config", "UA-21974567-38");
     </script>
   </body>
 </html>
