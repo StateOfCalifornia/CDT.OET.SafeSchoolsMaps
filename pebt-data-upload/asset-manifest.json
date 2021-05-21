@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/pebt-data-upload/static/css/main.40f1295b.chunk.css",
+    "main.js": "/pebt-data-upload/static/js/main.373ade34.chunk.js",
+    "main.js.map": "/pebt-data-upload/static/js/main.373ade34.chunk.js.map",
+    "runtime-main.js": "/pebt-data-upload/static/js/runtime-main.bb164b8d.js",
+    "runtime-main.js.map": "/pebt-data-upload/static/js/runtime-main.bb164b8d.js.map",
+    "static/js/2.8db63f30.chunk.js": "/pebt-data-upload/static/js/2.8db63f30.chunk.js",
+    "static/js/2.8db63f30.chunk.js.map": "/pebt-data-upload/static/js/2.8db63f30.chunk.js.map",
+    "static/js/3.0f616a5f.chunk.js": "/pebt-data-upload/static/js/3.0f616a5f.chunk.js",
+    "static/js/3.0f616a5f.chunk.js.map": "/pebt-data-upload/static/js/3.0f616a5f.chunk.js.map",
+    "index.html": "/pebt-data-upload/index.html",
+    "static/css/main.40f1295b.chunk.css.map": "/pebt-data-upload/static/css/main.40f1295b.chunk.css.map",
+    "static/js/2.8db63f30.chunk.js.LICENSE.txt": "/pebt-data-upload/static/js/2.8db63f30.chunk.js.LICENSE.txt",
+    "static/media/splashBackground.e4c50044.jpg": "/pebt-data-upload/static/media/splashBackground.e4c50044.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.bb164b8d.js",
+    "static/js/2.8db63f30.chunk.js",
+    "static/css/main.40f1295b.chunk.css",
+    "static/js/main.373ade34.chunk.js"
+  ]
+}
