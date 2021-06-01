@@ -6,7 +6,7 @@
       name="viewport"
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <title>Safe Schools Reopening - Charter Schools (BETA)</title>
+    <title>Summer Programming - Charter Schools</title>
 
     <style>
       html,
@@ -80,7 +80,7 @@
 
       .title-text {
         height: 100%;
-        padding-top: 24px;
+        /* padding-top: 24px; */
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -172,7 +172,7 @@
 
       .esri-popup__main-container {
         width: 332px !important;
-        margin-top: 220px;
+        margin-top: 180px;
       }
 
       .esri-popup--shadow {
@@ -292,7 +292,7 @@
           right: -26px !important;
           top: auto;
           left: auto;
-          bottom: 110px;
+          bottom: 90px;
           z-index: 100;
           padding: 8px 12px;
           border-radius: 8px 8px 0 0;
@@ -338,10 +338,8 @@
         </a>
 
         <div class="title-text">
-          <h1 class="navbar-title">
-            Safe Schools Reopening - Charter Schools (BETA)
-          </h1>
-          <p>This map is continuously updated.</p>
+          <h1 class="navbar-title">Summer Programming - Charter Schools</h1>
+          <!-- <p>This map is continuously updated.</p> -->
         </div>
       </div>
       <div class="header-right">
@@ -392,7 +390,8 @@
          *
          *********************************************************************/
 
-        var webmapId = "5873cab555014b1b8faa7888eb17b343";
+        var webmapId = "1df5511d5581488aa44d62dfb47ed91e";
+        var webmapId_stage = "9e7eeaca940d4d42ad9841172b8ebb13";
         var searchZoomScale = 2500;
         var searchLocationEnabled = false;
 
@@ -481,7 +480,7 @@
 
         function initSearchWidget() {
           searchWidget = new Search({
-            view: view,            
+            view: view,
             includeDefaultSources: function (sourcesResponse) {
               var results = [];
               sourcesResponse.defaultSources.forEach(function (item, i) {
