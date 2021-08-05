@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>Expanded Educational Opportunities - Private Schools</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        color: #333333;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Montserrat", sans-serif !important;
+      }
+
+      p,
+      li,
+      span,
+      input {
+        font-family: "Avenir", Helvetica, sans-serif;
+        color: #333333;
+      }
+
+      .esri-view .esri-view-surface--inset-outline:focus::after {
+        outline: none !important;
+      }
+
+      ‍‍‍ hr {
+        margin: 8px auto !important;
+      }
+
+      .app-header {
+        height: 60px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-content: center;
+        align-items: center;
+        padding: 4px 8px 4px 0;
+        color: #333333;
+      }
+
+      .header-left {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-content: center;
+        align-items: center;
+        margin: 4px auto 4px 8px;
+      }
+
+      .header-right {
+        max-width: 20%;
+        margin-right: 16px;
+      }
+
+      .header-right a {
+        color: #1f2574;
+        font-size: 1.2em;
+      }
+
+      .learnMore {
+        color: #1f2574;
+      }
+
+      .title-text {
+        height: 100%;
+        /* padding-top: 24px; */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+
+      .title-text p {
+        font-size: 1em;
+      }
+
+      .navbar-title {
+        white-space: nowrap;
+        overflow: hidden;
+        margin: 0 15px 0 0;
+        padding: 0 5px 0 0;
+        font-size: 1.5em;
+        font-weight: 500;
+        line-height: 1.2em;
+      }
+
+      .navbar-logo img {
+        display: block;
+        height: 50px;
+        width: auto;
+        min-width: 48px;
+      }
+
+      .esri-search {
+        width: 400px !important;
+        height: 40px;
+      }
+
+      .esri-search__container {
+        height: 40px !important;
+      }
+
+      .esri-search__sources-button {
+        display: none !important;
+      }
+
+      .esri-search__input-container {
+        height: 40px !important;
+      }
+
+      .esri-widget--button {
+        height: 40px !important;
+        width: 40px !important;
+      }
+
+      .esri-search__submit-button {
+        background-color: #1f2574 !important;
+        height: 40px !important;
+        width: 40px !important;
+        margin-top: 0;
+      }
+
+      .esri-search__submit-button:hover {
+        background-color: #14184c !important;
+      }
+
+      .esri-icon-search {
+        color: #ffffff !important;
+      }
+
+      .esri-search__form input {
+        height: 40px !important;
+      }
+
+      .esri-search__clear-button {
+        height: 40px !important;
+        width: 40px !important;
+      }
+
+      .esri-search__suggestions-menu {
+        max-height: 520px !important;
+      }
+
+      .esri-legend {
+        width: 332px;
+        position: absolute;
+        right: 16px;
+        top: 80px;
+        white-space: nowrap;
+        box-shadow: 0 0px 2px rgb(0 0 0 / 50%) !important;
+      }
+
+      .esri-legend__layer-table {
+        margin-bottom: 0 !important;
+      }
+
+      .esri-popup__main-container {
+        width: 332px !important;
+        margin-top: 180px;
+      }
+
+      .esri-popup--shadow {
+        box-shadow: 0 0px 2px rgb(0 0 0 / 50%) !important;
+      }
+
+      .btn-grouped {
+        width: 110px !important;
+      }
+
+      .esri-legend__service-label {
+        display: none !important;
+      }
+
+      .btns {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        overflow: auto;
+      }
+
+      .active-map {
+        color: #fff;
+        background-color: #1f2574;
+      }
+
+      .active-map:hover {
+        background-color: #14184c !important;
+      }
+
+      .legendOpen {
+        display: none;
+      }
+
+      .legendClose {
+        display: none;
+      }
+
+      /* resoponsive layouts*/
+      @media only screen and (max-width: 750px) {
+        .navbar-title {
+          white-space: normal;
+          font-size: 1em;
+          font-weight: 500;
+          line-height: 1em;
+        }
+
+        .title-text p {
+          font-size: 0.8em;
+        }
+
+        .header-right {
+          width: 24px;
+        }
+
+        .learnMore {
+          display: none;
+        }
+
+        .esri-ui-corner {
+          width: 100% !important;
+        }
+
+        .esri-search {
+          width: 100% !important;
+          padding-right: 0 auto;
+          margin: 0 auto;
+        }
+
+        .esri-legend {
+          width: 100%;
+          right: 0;
+          top: auto;
+          bottom: 16px;
+          transition: 0.5s;
+          z-index: 200;
+          position: fixed;
+        }
+
+        .legendClose {
+          position: inherit;
+          border-radius: 2px;
+          padding: 6px 7px;
+          right: 0;
+          left: auto;
+          margin: 12px 8px 16px auto;
+          line-height: 1.3em;
+          cursor: pointer;
+          -webkit-user-select: none;
+          user-select: none;
+          color: #6e6e6e;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: flex;
+          transition: background-color 125ms ease-in-out;
+        }
+
+        .esri-popup__navigation {
+          flex: 1;
+          justify-content: space-around !important;
+        }
+
+        .esri-popup__main-container {
+          width: 100% !important;
+          margin-top: 50px;
+        }
+
+        .legendOpen {
+          display: block;
+          position: fixed;
+          right: -26px !important;
+          top: auto;
+          left: auto;
+          bottom: 90px;
+          z-index: 100;
+          padding: 8px 12px;
+          border-radius: 8px 8px 0 0;
+          background-color: #f8f8f8;
+          color: #333333;
+          -ms-transform: rotate(-90deg);
+          /* IE 9 */
+          transform: rotate(-90deg);
+        }
+
+        button {
+          border: #4e4e4e !important;
+          box-shadow: 0 0px 2px rgb(0 0 0 / 50%) !important;
+        }
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.18/esri/themes/light/main.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.2.5/css/calcite-web.min.css"
+    />
+    <script src="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.2.5/js/calcite-web.min.js"></script>
+    <script src="https://js.arcgis.com/4.18/"></script>
+  </head>
+
+  <body>
+    <header class="navbar-fixed-top app-header">
+      <div class="header-left">
+        <a
+          aria-label="Home"
+          href="https://schools.covid19.ca.gov/"
+          target="_blank"
+          title="link to Safe Schools for all homepage"
+          class="navbar-logo"
+        >
+          <img
+            src="https://california.maps.arcgis.com/sharing/rest/content/items/eabecb26ec754b849c44175495e31e66/data"
+            alt="logo"
+          />
+        </a>
+
+        <div class="title-text">
+          <h1 class="navbar-title">Expanded Educational Opportunities - Private Schools</h1>
+          <!-- <p>This map is continuously updated.</p> -->
+        </div>
+      </div>
+      <div class="header-right">
+        <a
+          href="https://schools.covid19.ca.gov/pages/definitions"
+          target="_blank"
+          title="link to definitions page"
+          >&#9432; <span class="learnMore">Learn More</span></a
+        >
+      </div>
+    </header>
+
+    <div id="legendOpen">
+      <button class="legendOpen">Legend &#x2b;</button>
+    </div>
+
+    <div id="viewDiv"></div>
+    <div id="legend-div" />
+    <div
+      role="button"
+      tabindex="0"
+      class="legendClose"
+      aria-label="Close"
+      title="Close"
+    >
+      <span aria-hidden="true" class="esri-popup__icon esri-icon-close"></span>
+    </div>
+
+    <script>
+      require([
+        "dojo/dom",
+        "esri/WebMap",
+        "esri/core/watchUtils",
+        "esri/views/MapView",
+        "esri/widgets/Search",
+        "esri/widgets/Legend",
+      ], function (dojoDom, WebMap, watchUtils, MapView, Search, Legend) {
+        /**********************************************************************
+         *
+         * APPLICATION CONFIGURATION INSTRUCTIONS
+         *
+         * 1.  Update Application Title browser tab text. Search for `<title>`
+         * 2.  Update Header Text Search for `</h1>`
+         * 3.  Update configuration variables directly below: webmapId, searchZoomScale, searchLocationEnabled
+         *       - webmapId - Item ID of data to load. See Project README for webmap requirements
+         *       - searchZoomScale - the scale to zoom when a point is selected, non-point data will zoom to extent
+         *       - searchLocationEnabled - In search box, enable device location. I'd recommend true for polygon data false for point.
+         *
+         *********************************************************************/
+
+        var webmapId = "9f3fa0940a544a9fb922d0b21700074e";
+        var searchZoomScale = 2500;
+        var searchLocationEnabled = false;
+
+        var searchWidget = null;
+        var legend = null;
+
+        initEventListeners();
+
+        var view = new MapView({
+          container: "viewDiv",
+          map: new WebMap({
+            portalItem: {
+              id: webmapId,
+            },
+          }),
+          zoom: 5,
+          popup: {
+            actions: [],
+            dockEnabled: true,
+            dockOptions: {
+              buttonEnabled: false,
+              breakpoint: false,
+              position: "top-right",
+            },
+          },
+          highlightOptions: {
+            haloOpacity: 1,
+            fillOpacity: 0,
+          },
+        });
+
+        view.when(function () {
+          initSearchWidget();
+          initLegend();
+        });
+
+        watchUtils.watch(view.popup, "visible", function (value) {
+          if (window.matchMedia("(max-width: 750px)").matches) {
+            if (value) {
+              closeLegend();
+              hideLegendButton();
+            } else {
+              showLegendButton();
+            }
+          }
+        });
+
+        watchUtils.watch(view.popup, "selectedFeature", function (value) {
+          if (view.popup.selectedFeature) {
+            var layer = view.popup.selectedFeature.layer;
+            zoomToVisibleScale(layer);
+          }
+        });
+
+        function zoomToVisibleScale(layer) {
+          if (!layer || !view.constraints || !view.constraints.effectiveLODs) {
+            return;
+          }
+
+          var zoomToLOD = null;
+          if (view.scale < layer.maxScale) {
+            for (
+              var i = view.constraints.effectiveLODs.length - 1;
+              i > -1;
+              i--
+            ) {
+              var lod = view.constraints.effectiveLODs[i];
+              if (lod.scale > layer.maxScale) {
+                zoomToLOD = lod;
+                break;
+              }
+            }
+          } else if (layer.minScale && view.scale > layer.minScale) {
+            for (var i = 0; i < view.constraints.effectiveLODs.length; i++) {
+              var lod = view.constraints.effectiveLODs[i];
+              if (lod.scale < layer.minScale) {
+                zoomToLOD = lod;
+                break;
+              }
+            }
+          }
+          if (zoomToLOD) {
+            view.scale = zoomToLOD.scale + 1;
+          }
+        }
+
+        function initSearchWidget() {
+          searchWidget = new Search({
+            view: view,
+            searchAllEnabled: false,
+            allPlaceholder: "Search by School or District Name",
+            includeDefaultSources: function (sourcesResponse) {
+              var searchSources = [];
+              sourcesResponse.defaultSources.forEach(function (item, i) {
+                /**************************************************************
+                 *
+                 * Filter webmap search sources, only allowing school layers.
+                 * Save the index of each source, for toggling grade layers.
+                 *
+                 * NOTE: The source selection dropdown button is removed via css
+                 * See style .esri-search__sources-button
+                 *
+                 *************************************************************/
+                if (item.layer) {
+                  if (searchZoomScale && item.layer.geometryType === "point") {
+                    item.zoomScale = searchZoomScale;
+                  }
+                  searchSources.push(item);
+                }
+              });
+              return searchSources;
+            },
+            locationEnabled: searchLocationEnabled,
+            maxSuggestions: 5,
+          });
+
+          view.ui.add(searchWidget, {
+            position: "top-left",
+            index: 0,
+          });
+        }
+
+        function initLegend() {
+          legend = new Legend({
+            container: "legend-div",
+            view: view,
+          });
+        }
+
+        function initEventListeners() {
+          // Close Legend Button Click
+          document
+            .querySelector(".legendClose")
+            .addEventListener("click", function (event) {
+              closeLegend();
+            });
+          // Open Legend Button Click
+          document
+            .querySelector(".legendOpen")
+            .addEventListener("click", function (event) {
+              openLegend();
+            });
+        }
+
+        function openLegend() {
+          document.getElementById("legend-div").style.width = "100%";
+          document.querySelector(".legendClose").style.display = "";
+        }
+
+        function closeLegend() {
+          document.getElementById("legend-div").style.width = "0";
+          document.querySelector(".legendClose").style.display = "none";
+        }
+
+        function hideLegendButton() {
+          document.getElementById("legendOpen").style.display = "none";
+        }
+
+        function showLegendButton() {
+          document.getElementById("legendOpen").style.display = "";
+        }
+      });
+    </script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
+    ></script>
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      //statewide GA property
+      gtag("config", "UA-3419582-2");
+      //please update state department UA code in line below before deployment
+      gtag("config", "UA-21974567-38");
+    </script>
+  </body>
+</html>
